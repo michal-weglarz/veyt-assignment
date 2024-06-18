@@ -8,7 +8,7 @@
 	<Search />
 </header>
 
-<main class="mt-6 w-[600px]">
+<main class="mt-6 w-[1000px]">
 	<slot></slot>
 </main>
 
