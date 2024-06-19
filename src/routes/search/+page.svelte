@@ -4,6 +4,8 @@
 	import DataTable from './data-table.svelte';
 	import { ArchiveXIcon, Loader2, LoaderIcon } from 'lucide-svelte';
 	import { cn } from '$lib/utils';
+	import { afterNavigate } from '$app/navigation';
+	import { base } from '$app/paths';
 
 	export let data: PageData;
 

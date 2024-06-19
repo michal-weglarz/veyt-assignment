@@ -1,9 +1,8 @@
 import { type DataTableContent, quoteSchema, stockDataSchema } from '$lib/types';
 import { error, type ServerLoad } from '@sveltejs/kit';
 
-export const load: ServerLoad = async ({ url, fetch }) => {
+export const load: ServerLoad = async ({ url, fetch, setHeaders }) => {
 	const query = url.searchParams.get('q');
-
 	// stock info
 	const stockResponse = await fetch(`/api/search?q=${query}`);
 	const stockData = await stockResponse.json();
@@ -27,13 +26,14 @@ export const load: ServerLoad = async ({ url, fetch }) => {
 	}
 	const results = symbols.map(({ symbol, name }) => fetchQuoteData(symbol, name));
 
+	setHeaders({ 'cache-control': 'max-age=3600' });
 	return {
 		quotes: Promise.allSettled(results).then((settledResults) => {
 			const resolvedResults = settledResults.map((result) => {
 				if (result.status === 'fulfilled') {
 					return result.value;
 				} else {
-					return { symbol: undefined, error: result.reason, value: undefined };
+					return { symbol: undefined, name: undefined, error: result.reason, value: undefined };
 				}
 			});
 			const mappedData = resolvedResults.map((item) => {

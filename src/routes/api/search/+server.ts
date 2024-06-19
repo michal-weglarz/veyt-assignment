@@ -1,7 +1,7 @@
 import { json, error } from '@sveltejs/kit';
 import { API_KEY } from '$env/static/private';
 
-export async function GET({ url }) {
+export async function GET({ url, setHeaders }) {
 	const query = url.searchParams.get('q');
 
 	try {
@@ -12,6 +12,7 @@ export async function GET({ url }) {
 			throw new Error(`Error: ${response.statusText}`);
 		}
 		const data = await response.json();
+		setHeaders({ 'cache-control': 'max-age=3600' });
 		return json(data);
 	} catch (err) {
 		throw error(500, {

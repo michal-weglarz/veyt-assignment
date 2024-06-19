@@ -84,18 +84,13 @@
 			<Table.Body {...$tableBodyAttrs}>
 				{#each $pageRows as row (row.id)}
 					<Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-						<Table.Row
-							{...rowAttrs}
-							class="hover:cursor-pointer"
-							on:click={() => {
-								const symbol = row.original.symbol ?? '';
-								goto(`/history/${symbol}`);
-							}}
-						>
+						<Table.Row {...rowAttrs} class="hover:cursor-pointer">
 							{#each row.cells as cell (cell.id)}
 								<Subscribe attrs={cell.attrs()} let:attrs>
 									<Table.Cell {...attrs}>
-										<Render of={cell.render()} />
+										<a href={`/history/${row.original.symbol ?? ''}`}>
+											<Render of={cell.render()} />
+										</a>
 									</Table.Cell>
 								</Subscribe>
 							{/each}
