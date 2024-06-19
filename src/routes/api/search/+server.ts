@@ -9,7 +9,9 @@ export async function GET({ url, setHeaders }) {
 			`https://financialmodelingprep.com/api/v3/search?query=${query}&apikey=${API_KEY}`
 		);
 		if (!response.ok) {
-			throw new Error(`Error: ${response.statusText}`);
+			throw error(500, {
+				message: response.statusText
+			});
 		}
 		const data = await response.json();
 		setHeaders({ 'cache-control': 'max-age=3600' });

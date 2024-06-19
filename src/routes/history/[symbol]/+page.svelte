@@ -19,22 +19,26 @@
 	import { base } from '$app/paths';
 	import { afterNavigate } from '$app/navigation';
 	import { LoaderIcon } from 'lucide-svelte';
+	import type { HistoricalData } from '$lib/types';
+	import ErrorMessage from '$lib/components/ErrorMessage.svelte';
 	ChartJS.register(Title, Tooltip, Legend, LineElement, LinearScale, PointElement, CategoryScale);
 	export let data: PageData;
 
-	function transformHistoricalData(data: any): ChartData<'line', (number | Point)[], unknown> {
+	function transformHistoricalData(
+		data: HistoricalData['historical']
+	): ChartData<'line', (number | Point)[], unknown> {
 		return {
-			labels: data.map((item: any) => item.date).reverse(),
+			labels: data.map((item) => item.date).reverse(),
 			datasets: [
 				{
 					label: 'Price',
-					data: data.map((item: any) => item.close).reverse()
+					data: data.map((item) => item.close).reverse()
 				}
 			]
 		};
 	}
 
-	let previousPage: string = base;
+	let previousPage: string = '/';
 
 	afterNavigate(({ from }) => {
 		previousPage = from?.url.href || previousPage;
@@ -66,10 +70,12 @@
 {#await data.historical}
 	<div class="flex flex-col items-center justify-center">
 		<LoaderIcon class="animate-spin" />
-		<span>Fetching data...</span>
+		<span>Loading data...</span>
 	</div>
 {:then historicalData}
 	<div>
 		<Line data={transformHistoricalData(historicalData)} options={{ responsive: true }} />
 	</div>
+{:catch error}
+	<ErrorMessage content={JSON.parse(error).message} />
 {/await}

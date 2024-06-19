@@ -1,5 +1,6 @@
 import { type DataTableContent, quoteSchema, stockDataSchema } from '$lib/types';
 import { error, type ServerLoad } from '@sveltejs/kit';
+import { toast } from 'svelte-sonner';
 
 export const load: ServerLoad = async ({ url, fetch, setHeaders }) => {
 	const query = url.searchParams.get('q');
@@ -9,7 +10,7 @@ export const load: ServerLoad = async ({ url, fetch, setHeaders }) => {
 	const stockResult = stockDataSchema.safeParse(stockData);
 	if (!stockResult.success) {
 		error(404, {
-			message: 'Not found'
+			message: 'Could not find stock data'
 		});
 	}
 
@@ -36,26 +37,16 @@ export const load: ServerLoad = async ({ url, fetch, setHeaders }) => {
 					return { symbol: undefined, name: undefined, error: result.reason, value: undefined };
 				}
 			});
-			const mappedData = resolvedResults.map((item) => {
+			return resolvedResults.map((item): DataTableContent => {
 				const value = item.value?.at(0);
-				if (value) {
-					return {
-						symbol: value.symbol,
-						name: value.name,
-						price: value.price,
-						change: value.change,
-						changesPercentage: value.changesPercentage
-					} satisfies DataTableContent;
-				}
 				return {
-					symbol: item.symbol ?? '',
-					name: item.name ?? '',
-					price: undefined,
-					change: undefined,
-					changesPercentage: undefined
-				} satisfies DataTableContent;
+					symbol: value ? value.symbol : item.symbol ?? '',
+					name: value ? value.name : item.name ?? '',
+					price: value ? value.price : undefined,
+					change: value ? value.change : undefined,
+					changesPercentage: value ? value.changesPercentage : undefined
+				};
 			});
-			return mappedData;
 		})
 	};
 };

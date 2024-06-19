@@ -6,6 +6,7 @@
 	import { cn } from '$lib/utils';
 	import { afterNavigate } from '$app/navigation';
 	import { base } from '$app/paths';
+	import ErrorMessage from '$lib/components/ErrorMessage.svelte';
 
 	export let data: PageData;
 
@@ -21,7 +22,7 @@
 	{#await data.quotes}
 		<div class="flex flex-col items-center justify-center">
 			<LoaderIcon class="animate-spin" />
-			<span>Fetching data...</span>
+			<span>Loading data...</span>
 		</div>
 	{:then quotes}
 		{#if quotes.length > 0}
@@ -33,6 +34,6 @@
 			</div>
 		{/if}
 	{:catch error}
-		Error
+		<ErrorMessage content={JSON.parse(error).message} />
 	{/await}
 </div>

@@ -28,7 +28,7 @@ export async function GET({ params }) {
 			`https://financialmodelingprep.com/api/v3/historical-price-full/${symbol}?from=${oneMonthAgo}&to=${today}&apikey=${API_KEY}`
 		);
 		if (!response.ok) {
-			throw new Error(`Error: ${response.statusText}`);
+			throw error(500, `Error: ${response.statusText}`);
 		}
 		const data = await response.json();
 		return json(data);

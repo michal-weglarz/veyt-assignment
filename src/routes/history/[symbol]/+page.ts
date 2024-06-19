@@ -11,7 +11,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		const result = historicalDataSchema.safeParse(data);
 		if (!result.success) {
 			throw error(404, {
-				message: 'Not found'
+				message: 'Could not find historical data'
 			});
 		}
 		return result.data?.historical;
