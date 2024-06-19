@@ -32,6 +32,9 @@
 			datasets: [
 				{
 					label: 'Price',
+					borderColor: 'rgba(75, 192, 192, 1)',
+					backgroundColor: 'rgba(75, 192, 192, 0.2)',
+					borderWidth: 2,
 					data: data.map((item) => item.close).reverse()
 				}
 			]
