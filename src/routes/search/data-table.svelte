@@ -5,6 +5,7 @@
 	import DataTablePagination from './data-table-pagination.svelte';
 	import { addPagination } from 'svelte-headless-table/plugins';
 	import * as Table from '$lib/components/ui/table';
+	import { goto } from '$app/navigation';
 
 	export let data: StockData;
 	const tableData = writable(data);
@@ -57,7 +58,14 @@
 			<Table.Body {...$tableBodyAttrs}>
 				{#each $pageRows as row (row.id)}
 					<Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-						<Table.Row {...rowAttrs}>
+						<Table.Row
+							{...rowAttrs}
+							class="hover:cursor-pointer"
+							on:click={() => {
+								const symbol = row.original.symbol ?? '';
+								goto(`/history/${symbol}`);
+							}}
+						>
 							{#each row.cells as cell (cell.id)}
 								<Subscribe attrs={cell.attrs()} let:attrs>
 									<Table.Cell {...attrs}>
