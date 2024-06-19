@@ -4,7 +4,7 @@
 </script>
 
 <header class="flex flex-col gap-4">
-	<h1 class="text-4xl">Veyt Assignment</h1>
+	<h1 class="text-4xl font-bold">Veyt Assignment</h1>
 	<Search />
 </header>
 

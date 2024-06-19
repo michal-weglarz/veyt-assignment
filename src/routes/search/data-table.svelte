@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { type StockData } from '$lib/types';
+	import { type DataTableContent } from '$lib/types';
 	import { writable } from 'svelte/store';
 	import { createTable, Render, Subscribe } from 'svelte-headless-table';
 	import DataTablePagination from './data-table-pagination.svelte';
@@ -7,9 +7,9 @@
 	import * as Table from '$lib/components/ui/table';
 	import { goto } from '$app/navigation';
 
-	export let data: StockData;
-	const tableData = writable(data);
-	$: tableData.set(data);
+	export let content: Array<DataTableContent>;
+	const tableData = writable(content);
+	$: tableData.set(content);
 
 	const table = createTable(tableData, {
 		page: addPagination()
@@ -25,12 +25,16 @@
 			header: 'Name'
 		}),
 		table.column({
-			accessor: 'currency',
-			header: 'Currency'
+			accessor: 'price',
+			header: 'Price'
 		}),
 		table.column({
-			accessor: 'stockExchange',
-			header: 'Stock Exchange'
+			accessor: 'change',
+			header: 'Change'
+		}),
+		table.column({
+			accessor: 'changesPercentage',
+			header: 'Change %'
 		})
 	]);
 	const tableModel = table.createViewModel(columns);
