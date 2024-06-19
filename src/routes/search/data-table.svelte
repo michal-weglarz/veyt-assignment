@@ -1,11 +1,13 @@
 <script lang="ts">
 	import { type DataTableContent } from '$lib/types';
 	import { writable } from 'svelte/store';
-	import { createTable, Render, Subscribe } from 'svelte-headless-table';
+	import { createRender, createTable, Render, Subscribe } from 'svelte-headless-table';
 	import DataTablePagination from './data-table-pagination.svelte';
 	import { addPagination } from 'svelte-headless-table/plugins';
 	import * as Table from '$lib/components/ui/table';
 	import { goto } from '$app/navigation';
+	import DataTablePriceChangeCell from './data-table-price-change-cell.svelte';
+	import DataTableCell from './data-table-cell.svelte';
 
 	export let content: Array<DataTableContent>;
 	const tableData = writable(content);
@@ -22,19 +24,39 @@
 		}),
 		table.column({
 			accessor: 'name',
-			header: 'Name'
+			header: 'Name',
+			cell: ({ value }) => {
+				return createRender(DataTableCell, {
+					value
+				});
+			}
 		}),
 		table.column({
 			accessor: 'price',
-			header: 'Price'
+			header: 'Price',
+			cell: ({ value }) => {
+				return createRender(DataTableCell, {
+					value
+				});
+			}
 		}),
 		table.column({
 			accessor: 'change',
-			header: 'Change'
+			header: 'Change',
+			cell: ({ value }) => {
+				return createRender(DataTablePriceChangeCell, {
+					value
+				});
+			}
 		}),
 		table.column({
 			accessor: 'changesPercentage',
-			header: 'Change %'
+			header: 'Change %',
+			cell: ({ value }) => {
+				return createRender(DataTablePriceChangeCell, {
+					value
+				});
+			}
 		})
 	]);
 	const tableModel = table.createViewModel(columns);

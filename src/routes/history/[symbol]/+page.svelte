@@ -19,11 +19,11 @@
 
 	let chartData: ChartData<'line', (number | Point)[], unknown> = { labels: [], datasets: [] };
 	$: {
-		chartData.labels = data.historical.map((item) => item.date);
+		chartData.labels = data.historical.map((item) => item.date).reverse();
 		chartData.datasets = [
 			{
 				label: 'Price',
-				data: data.historical.map((item) => item.close)
+				data: data.historical.map((item) => item.close).reverse()
 			}
 		];
 	}

@@ -1,9 +1,10 @@
-import { quoteSchema, stockDataSchema } from '$lib/types';
+import { type DataTableContent, quoteSchema, stockDataSchema } from '$lib/types';
 import { error, type ServerLoad } from '@sveltejs/kit';
 
 export const load: ServerLoad = async ({ url, fetch }) => {
 	const query = url.searchParams.get('q');
 
+	// stock info
 	const stockResponse = await fetch(`/api/search?q=${query}`);
 	const stockData = await stockResponse.json();
 	const stockResult = stockDataSchema.safeParse(stockData);
@@ -12,38 +13,49 @@ export const load: ServerLoad = async ({ url, fetch }) => {
 			message: 'Not found'
 		});
 	}
-	const symbols = stockResult.data?.map((item) => item.symbol);
-	async function fetchData(symbol: string) {
+
+	// quote info
+	const symbols = stockResult.data?.map((item) => ({
+		symbol: item.symbol,
+		name: item.name
+	}));
+	async function fetchQuoteData(symbol: string, name: string) {
 		const response = await fetch(`/api/quote/${symbol}`);
-		if (!response.ok) {
-			return { symbol, error: `Failed to fetch data for ${symbol}: ${response.statusText}` };
-		}
 		const data = await response.json();
 		const result = quoteSchema.safeParse(data);
-		if (!result.success) {
-			error(404, {
-				message: 'Not found'
-			});
-		}
-		return { symbol, value: result.data };
+		return { symbol, name, value: result.data };
 	}
-
-	const results = await Promise.allSettled(symbols.map(fetchData));
-
-	const quotes = results.flatMap((result) => {
-		if (result.status === 'fulfilled') {
-			return result.value.value ?? [];
-		} else {
-			return [];
-		}
-	});
-
-	console.log('results', results);
-
-	// const test = Promise.allSettled(fetchQuotesPromises);
+	const results = symbols.map(({ symbol, name }) => fetchQuoteData(symbol, name));
 
 	return {
-		searchResults: stockResult.data,
-		quotes
+		quotes: Promise.allSettled(results).then((settledResults) => {
+			const resolvedResults = settledResults.map((result) => {
+				if (result.status === 'fulfilled') {
+					return result.value;
+				} else {
+					return { symbol: undefined, error: result.reason, value: undefined };
+				}
+			});
+			const mappedData = resolvedResults.map((item) => {
+				const value = item.value?.at(0);
+				if (value) {
+					return {
+						symbol: value.symbol,
+						name: value.name,
+						price: value.price,
+						change: value.change,
+						changesPercentage: value.changesPercentage
+					} satisfies DataTableContent;
+				}
+				return {
+					symbol: item.symbol ?? '',
+					name: item.name ?? '',
+					price: undefined,
+					change: undefined,
+					changesPercentage: undefined
+				} satisfies DataTableContent;
+			});
+			return mappedData;
+		})
 	};
 };

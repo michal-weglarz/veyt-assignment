@@ -6,7 +6,7 @@ export async function GET({ url }) {
 
 	try {
 		const response = await fetch(
-			`https://financialmodelingprep.com/api/v3/search?query=${query}&limit=3&apikey=${API_KEY}`
+			`https://financialmodelingprep.com/api/v3/search?query=${query}&apikey=${API_KEY}`
 		);
 		if (!response.ok) {
 			throw new Error(`Error: ${response.statusText}`);
