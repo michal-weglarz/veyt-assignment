@@ -1,7 +1,6 @@
 <script lang="ts">
 	import '../app.css';
 	import Search from '$lib/components/Search.svelte';
-	import { Link } from 'lucide-svelte';
 </script>
 
 <header class="flex flex-col gap-4 pt-6">

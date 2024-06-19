@@ -2,13 +2,13 @@
 	import { page } from '$app/stores';
 	import type { PageData } from './$types';
 	import DataTable from './data-table.svelte';
+	import { ArchiveXIcon, Loader2, LoaderIcon } from 'lucide-svelte';
+	import { cn } from '$lib/utils';
 
 	export let data: PageData;
 
 	let query = '';
 	$: query = $page.url.searchParams.get('q') ?? '';
-
-	$: count = data.quotes.length;
 </script>
 
 <div class="flex flex-col gap-2">
@@ -17,10 +17,20 @@
 	</div>
 
 	{#await data.quotes}
-		Loading...
+		<div class="flex flex-col items-center justify-center">
+			<LoaderIcon class="animate-spin" />
+			<span>Fetching data...</span>
+		</div>
 	{:then quotes}
-		<DataTable content={quotes} />
+		{#if quotes.length > 0}
+			<DataTable content={quotes} />
+		{:else}
+			<div class="mt-12 flex flex-col items-center justify-center gap-2">
+				<ArchiveXIcon class="h-8 w-8" />
+				<span>No stocks found. Please try a different search.</span>
+			</div>
+		{/if}
 	{:catch error}
-		Error {JSON.stringify(error)}
+		Error
 	{/await}
 </div>
