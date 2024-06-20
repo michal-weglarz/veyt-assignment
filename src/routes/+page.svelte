@@ -25,12 +25,15 @@
 		{:else}
 			<Card.Root class="w-[380px]">
 				<Card.Header>
-					<Card.Title>
-						<div class="flex flex-row items-center gap-2">
-							<SearchXIcon class="fil h-5 w-5" />
-							<p class="text-slate-500">You haven't searched anything yet.</p>
+					<div class="flex flex-row gap-2">
+						<SearchXIcon class="h-8 w-8" />
+						<div>
+							<Card.Title>
+								<p>You haven't searched anything yet</p>
+							</Card.Title>
+							<Card.Description class="text-slate-500">Use the search box above.</Card.Description>
 						</div>
-					</Card.Title>
+					</div>
 				</Card.Header>
 			</Card.Root>
 		{/if}
