@@ -16,7 +16,6 @@
 	} from 'chart.js';
 	import { Button } from '$lib/components/ui/button';
 	import ChevronLeft from 'svelte-radix/ChevronLeft.svelte';
-	import { base } from '$app/paths';
 	import { afterNavigate } from '$app/navigation';
 	import { LoaderIcon } from 'lucide-svelte';
 	import type { HistoricalData } from '$lib/types';
