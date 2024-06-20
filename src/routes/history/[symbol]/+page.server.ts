@@ -1,9 +1,8 @@
-import type { PageLoad } from './$types';
 import { historicalDataSchema } from '$lib/types';
-import { error } from '@sveltejs/kit';
+import { error, type ServerLoad } from '@sveltejs/kit';
 import { API_KEY } from '$env/static/private';
 
-export const load: PageLoad = async ({ params, fetch }) => {
+export const load: ServerLoad = async ({ params, fetch }) => {
 	const symbol = params.symbol;
 
 	function formatDate(date: Date) {
@@ -32,18 +31,18 @@ export const load: PageLoad = async ({ params, fetch }) => {
 				`https://financialmodelingprep.com/api/v3/historical-price-full/${symbol}?from=${oneMonthAgo}&to=${today}&apikey=${API_KEY}`
 			);
 			if (!response.ok) {
-				error(500, `HTTP Error: ${response.statusText}`);
+				error(500, `Failed to fetch historical data for ${symbol}`);
 			}
 			const data = await response.json();
 			const result = historicalDataSchema.safeParse(data);
 			if (!result.success) {
 				error(404, {
-					message: 'Could not find historical data'
+					message: `Could not find historical data for ${symbol}`
 				});
 			}
 			return result.data?.historical;
 		} catch {
-			return [];
+			error(500, `Failed to fetch historical data for ${symbol}`);
 		}
 	};
 

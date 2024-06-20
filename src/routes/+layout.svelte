@@ -5,6 +5,8 @@
 	import { ModeWatcher, toggleMode } from 'mode-watcher';
 	import { Button } from '$lib/components/ui/button';
 	import { Moon, Sun } from 'lucide-svelte';
+	import { navigating } from '$app/stores';
+	import { Skeleton } from '$lib/components/ui/skeleton';
 </script>
 
 <header class="flex flex-col gap-4 pt-6">
@@ -26,15 +28,22 @@
 	<Search />
 </header>
 
-<main class="mb-6 mt-6 w-[1000px]">
-	<Toaster />
+<main class="mt-6 w-[600px] max-w-full md:w-[800px] lg:w-[1000px]">
+	<Toaster richColors />
 	<ModeWatcher />
-	<slot></slot>
+	{#if $navigating}
+		<div class="space-y-4">
+			<Skeleton class="h-4 w-[250px]" />
+			<Skeleton class="h-32 w-full" />
+		</div>
+	{:else}
+		<slot></slot>
+	{/if}
 </main>
 
 <style>
 	:root {
-		margin: 0;
+		margin: 16px;
 		display: flex;
 		justify-content: center;
 		justify-items: center;

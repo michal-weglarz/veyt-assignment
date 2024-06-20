@@ -15,6 +15,7 @@ export const load: ServerLoad = async ({ url, fetch, setHeaders }) => {
 		const stockData = await stockResponse.json();
 		const stockResult = stockDataSchema.safeParse(stockData);
 		if (!stockResult.success) {
+			console.log('13123');
 			error(404, {
 				message: 'Could not find stock data'
 			});
@@ -65,9 +66,9 @@ export const load: ServerLoad = async ({ url, fetch, setHeaders }) => {
 				});
 			})
 		};
-	} catch (err) {
-		error(404, {
-			message: 'Could not find stock data'
+	} catch {
+		error(500, {
+			message: `Failed to fetch stock data for the query ${query !== '' ? `"${query}"` : ''}`
 		});
 	}
 };
