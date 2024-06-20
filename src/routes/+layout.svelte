@@ -28,7 +28,7 @@
 	<Search />
 </header>
 
-<main class="mt-6 w-[600px] max-w-full md:w-[800px] lg:w-[1000px]">
+<main class="mb-6 mt-6 w-[600px] max-w-full md:w-[800px] lg:w-[1000px]">
 	<Toaster richColors />
 	<ModeWatcher />
 	{#if $navigating}
