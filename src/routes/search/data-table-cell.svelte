@@ -5,7 +5,7 @@
 </script>
 
 <div class="bg-red flex items-center">
-	{#if value === undefined}
+	{#if value === undefined || value === ''}
 		<Badge variant="secondary">N/A</Badge>
 	{:else}
 		<span>{value}</span>

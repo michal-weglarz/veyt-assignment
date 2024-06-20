@@ -56,7 +56,6 @@
 			>
 				<ChevronLeft class="h-4 w-4" />
 			</Button>
-			<!--			</a>-->
 		</TooltipUI.Trigger>
 		<TooltipUI.Content>
 			<p>Go back</p>
@@ -67,10 +66,6 @@
 </div>
 
 {#await data.historical}
-	<!--	<div class="flex flex-col items-center justify-center">-->
-	<!--		<LoaderIcon class="animate-spin" />-->
-	<!--		<span>Loading data...</span>-->
-	<!--	</div>-->
 	<div class="mt-4">
 		<Skeleton class="h-32 w-full" />
 	</div>
@@ -85,6 +80,7 @@
 				datasets: [
 					{
 						label: 'Price',
+						fill: true,
 						borderColor: 'rgba(75, 192, 192, 1)',
 						backgroundColor: 'rgba(75, 192, 192, 0.2)',
 						borderWidth: 2,

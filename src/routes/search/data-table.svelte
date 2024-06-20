@@ -5,7 +5,6 @@
 	import DataTablePagination from './data-table-pagination.svelte';
 	import { addPagination } from 'svelte-headless-table/plugins';
 	import * as Table from '$lib/components/ui/table';
-	import { goto } from '$app/navigation';
 	import DataTablePriceChangeCell from './data-table-price-change-cell.svelte';
 	import DataTableCell from './data-table-cell.svelte';
 
@@ -20,7 +19,12 @@
 	const columns = table.createColumns([
 		table.column({
 			accessor: 'symbol',
-			header: 'Symbol'
+			header: 'Symbol',
+			cell: ({ value }) => {
+				return createRender(DataTableCell, {
+					value
+				});
+			}
 		}),
 		table.column({
 			accessor: 'name',

@@ -15,7 +15,6 @@ export const load: ServerLoad = async ({ url, fetch, setHeaders }) => {
 		const stockData = await stockResponse.json();
 		const stockResult = stockDataSchema.safeParse(stockData);
 		if (!stockResult.success) {
-			console.log('13123');
 			error(404, {
 				message: 'Could not find stock data'
 			});
